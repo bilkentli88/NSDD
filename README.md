@@ -1,6 +1,6 @@
 # Matched-State Identifiability and Certification of Learned State-Dependent Delays in Neural Delay Differential Equations
 
-This repository contains the CPU-scale implementation and controlled experiments supporting the manuscript **“Matched-State Identifiability and Certification of Learned State-Dependent Delays in Neural Delay Differential Equations”**
+This repository contains the CPU-scale implementation and controlled experiments supporting the manuscript **“Matched-State Identifiability and Certification of Learned State-Dependent Delays in Neural Delay Differential Equations.”**
 
 The code distinguishes three questions that should not be conflated:
 
