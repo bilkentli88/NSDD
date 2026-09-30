@@ -1,18 +1,22 @@
 # Matched-State Identifiability and Certification of Learned State-Dependent Delays in Neural Delay Differential Equations
 
-This repository contains the CPU-scale implementation and controlled experiments supporting the manuscript **“Matched-State Identifiability and Certification of Learned State-Dependent Delays in Neural Delay Differential Equations.”**
+This repository contains the CPU-scale implementation and controlled experiments associated with the manuscript **“Matched-State Identifiability and Certification of Learned State-Dependent Delays in Neural Delay Differential Equations.”**
 
-The code distinguishes three questions that should not be conflated:
+The work distinguishes three questions that should not be conflated:
 
 1. whether a model predicts trajectories accurately;
 2. whether a state-dependent delay is structurally identifiable in the declared model class;
 3. whether the available noisy histories support a practical certificate at a queried state.
 
-The experiments cover unrestricted delay--field compensation, projectively informative and centered-degenerate history designs, trajectory-only optimization, observation-noise scaling, solver refinement, state-domain extrapolation, and partial observation in a delayed oscillator.
+The experiments examine unrestricted delay--field compensation, projectively informative and centered-degenerate history designs, profile-informed delay anchors, trajectory-only optimization, fresh-noise replication, observation-noise scaling, solver refinement, state-domain extrapolation, and partial observation in a delayed oscillator.
 
 ## Scientific scope
 
-The positive recovery mechanism is restricted to the scalar affine delayed-state model and the fixed matched-slope inverse problem. Profile minimizers provide data-derived delay anchors, not ground-truth labels. The vector oscillator is a qualitative limitation experiment rather than a vector identifiability theorem.
+The positive recovery theory is restricted to the scalar affine delayed-state model and the fixed matched-slope inverse problem. It is not an if-and-only-if characterization of the complete trajectory observation operator.
+
+Profile minimizers provide data-derived delay anchors rather than ground-truth labels. In the reported experiments, the profile-derived anchors and the rollout loss are constructed from the same training trajectories. The anchors should therefore be interpreted as a geometry-aware re-expression of information already present in the training data, not as independent supervision or independent validation.
+
+The vector oscillator experiment is a qualitative partial-observation stress test and is not covered by the scalar projective-identifiability theorem.
 
 ## Repository structure
 
@@ -39,7 +43,7 @@ The positive recovery mechanism is restricted to the scalar affine delayed-state
 └── docs/
 ```
 
-See [`docs/experiment_mapping.md`](docs/experiment_mapping.md) for the mapping between scientific claims, entry points, and outputs.
+See [`docs/experiment_mapping.md`](docs/experiment_mapping.md) for the mapping between manuscript results, experiment entry points, and generated outputs.
 
 ## Installation
 
@@ -47,8 +51,13 @@ Python 3.13 and a CPU build of PyTorch were used for the validated package.
 
 ```bash
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/macOS: source .venv/bin/activate
+
+# Windows
+.venv\Scripts\activate
+
+# Linux/macOS
+source .venv/bin/activate
+
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
@@ -62,6 +71,8 @@ conda activate neural-sddde-identifiability
 
 ## Validate the included results
 
+The supplied reference outputs can be checked without rerunning all training experiments:
+
 ```bash
 python scripts/validate_precomputed_results.py
 python -m unittest discover -s tests -v
@@ -73,7 +84,7 @@ python -m unittest discover -s tests -v
 python scripts/reproduce_all.py --mode quick
 ```
 
-This runs the shortened principal configuration and the validated extended configuration. It verifies the complete workflow but does **not** reproduce the three-seed principal summary.
+This executes shortened configurations intended to verify the end-to-end computational workflow. It is not intended to reproduce the full manuscript-scale replication.
 
 ## Manuscript-scale reproduction
 
@@ -88,7 +99,9 @@ python experiments/run_principal_scalar.py --mode paper
 python experiments/run_extended_experiments.py --mode paper
 ```
 
-The extended `paper` mode reruns the configuration used for the included extended result files. Regenerated artifacts are written to `generated/` subdirectories so the supplied references are not overwritten. A longer, non-reference sensitivity configuration is available through:
+The `paper` configuration reproduces the computational settings associated with the supplied manuscript results. Regenerated artifacts are written to `generated/` subdirectories so that the supplied reference outputs are not overwritten.
+
+A longer, non-reference sensitivity configuration is also available:
 
 ```bash
 python experiments/run_extended_experiments.py --mode extended
@@ -96,25 +109,44 @@ python experiments/run_extended_experiments.py --mode extended
 
 ## Main outputs
 
+Principal scalar outputs include:
+
 - `results/principal_scalar/generated/model_summary.csv`
 - `results/principal_scalar/generated/certificate_results.csv`
+
+Extended outputs include:
+
 - `results/extended/reference/noise_scaling.csv`
 - `results/extended/reference/solver_refinement.csv`
 - `results/extended/reference/extrapolation.csv`
 - `results/extended/reference/oscillator_summary.csv`
-- supplied reference figures under `figures/extended/reference/` and regenerated figures under `figures/**/generated/`
-- supplied reference state dictionaries under `checkpoints/` and regenerated states under `checkpoints/**/generated/`
+
+Reference figures are supplied under `figures/extended/reference/`, while regenerated figures are written under `figures/**/generated/`.
+
+Reference model states are supplied under `checkpoints/`, and regenerated states are written under the corresponding `generated/` directories.
+
+## Experimental replication
+
+The fresh-noise confirmation uses five independently generated noisy datasets with three paired optimization seeds nested within each dataset. The five datasets are the independent data replications; the three optimization seeds quantify optimization variability and should not be interpreted as additional independent datasets.
+
+Prediction error, delay error, and certificate outcomes are reported separately.
+
+## Code and data availability
+
+All datasets used in the reported experiments are synthetically generated by the provided code. No external proprietary dataset is required to reproduce the reported results.
+
+The repository contains the experiment scripts, validation utilities, supplied reference outputs, model checkpoints, and configuration files needed to reproduce or verify the computational analyses reported in the manuscript and Supplementary Material.
 
 ## Computational requirements
 
-The supplied extended configuration is designed for one CPU thread and typically completes in tens of seconds in the validated environment. The three-seed principal configuration is more expensive. Runtime and final digits may vary across platforms and PyTorch builds.
+The supplied extended configuration is designed for execution on a single CPU thread and typically completes in tens of seconds in the validated environment. The principal replication is more computationally demanding.
+
+Runtime and final numerical digits may vary across operating systems, processor architectures, Python versions, and PyTorch builds.
 
 ## Citation
 
-The `CITATION.cff` file currently contains anonymous placeholder authorship and a placeholder repository URL. Replace these fields before public archival or DOI creation.
+Citation metadata are provided in [`CITATION.cff`](CITATION.cff). Please use the bibliographic information associated with the manuscript or its published version when citing this work.
 
 ## License
 
-The code is released under the MIT License. Checkpoint files are supplied solely to reproduce the accompanying experiments.
-# NSDD
-Code and controlled experiments for identifiability and certification of learned state-dependent delays in Neural DDEs.
+The code is released under the MIT License. Checkpoint files are supplied for reproducibility of the accompanying computational experiments.
